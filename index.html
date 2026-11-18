@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#171923" />
+    <meta
+      name="description"
+      content="Эфирия — рисованный платформер. Исследуйте небесные острова, собирайте монеты и открывайте новые тропы."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Эфирия · Хроники островов</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand" aria-label="Эфирия. Хроники островов">
+          <div id="brand-mark"></div>
+          <div class="brand-type">
+            <strong>Эфирия</strong><span>ХРОНИКИ ОСТРОВОВ</span>
+          </div>
+        </div>
+        <span class="header-separator"></span>
+        <nav class="main-nav" aria-label="Навигация игры">
+          <button
+            id="nav-map"
+            aria-label="Карта мира"
+            class="nav-item current"
+            aria-current="page"
+          >
+            <i data-icon="map"></i><span>Карта мира</span>
+          </button>
+          <button
+            id="nav-journal"
+            aria-label="Дневник путешествий"
+            class="nav-item"
+          >
+            <i data-icon="book"></i><span>Дневник</span>
+          </button>
+        </nav>
+        <div class="header-tools">
+          <div class="wallet" aria-label="Награды за пройденные уровни">
+            <span class="resource" title="Собранные монеты"
+              ><i id="coin-icon"></i><b id="wallet-coins">0</b></span
+            ><span class="wallet-divider"></span
+            ><span class="resource" title="Кристаллы за звёзды прохождения"
+              ><i id="gem-icon"></i><b id="wallet-gems">0</b></span
+            >
+          </div>
+          <span class="tool-divider"></span>
+          <button
+            id="audio-toggle"
+            class="icon-btn"
+            aria-label="Выключить звук"
+            title="Выключить звук"
+          >
+            <i data-icon="volume"></i>
+          </button>
+          <button
+            id="settings"
+            class="icon-btn"
+            aria-label="Настройки"
+            title="Настройки"
+          >
+            <i data-icon="settings"></i>
+          </button>
+        </div>
+      </header>
+      <main class="stage" id="stage">
+        <section id="atlas" aria-label="Атлас небесных островов">
+          <div
+            id="map-viewport"
+            tabindex="0"
+            aria-label="Карта уровней. Перемещайте карту мышью или стрелками, меняйте масштаб клавишами плюс и минус."
+          >
+            <div id="map-land"></div>
+            <div id="marker-layer"></div>
+          </div>
+          <div class="map-shading" aria-hidden="true"></div>
+          <div class="map-heading">
+            <div class="eyebrow chapter">
+              <i data-icon="sparkle" data-size="14"></i><span>ГЛАВА I</span
+              ><em></em><span>НЕБЕСНЫЕ ОСТРОВА</span>
+            </div>
+            <h1>Карта мира</h1>
+            <div class="atlas-progress">
+              <i data-icon="flag" data-size="15"></i><span>Открыто уровней</span
+              ><strong id="open-count">1 <i>/</i> 8</strong>
+            </div>
+          </div>
+          <div id="map-compass" class="compass" aria-hidden="true"></div>
+          <div class="map-sparks" aria-hidden="true"></div>
+          <article
+            id="level-card"
+            class="level-card"
+            aria-live="polite"
+          ></article>
+          <div class="map-instruments" aria-label="Масштаб карты">
+            <div class="zoom-group">
+              <button
+                id="zoom-out"
+                aria-label="Уменьшить масштаб"
+                title="Уменьшить масштаб (−)"
+              >
+                <i data-icon="minus" data-size="17"></i></button
+              ><output id="zoom">100%</output
+              ><button
+                id="zoom-in"
+                aria-label="Увеличить масштаб"
+                title="Увеличить масштаб (+)"
+              >
+                <i data-icon="plus" data-size="17"></i>
+              </button>
+            </div>
+            <button
+              class="recenter"
+              id="recenter"
+              aria-label="К выбранному уровню"
+              title="К выбранному уровню"
+            >
+              <i data-icon="center" data-size="18"></i>
+            </button>
+          </div>
+        </section>
+        <section id="playfield" hidden aria-label="Платформер">
+          <canvas
+            id="game-canvas"
+            tabindex="0"
+            aria-label="Игровое поле. Стрелки или A и D — ходьба; пробел — прыжок; вверх и вниз — лестницы; F — магия."
+          ></canvas>
+          <div class="play-vignette"></div>
+          <div class="run-top">
+            <div class="run-status glass">
+              <div class="run-portrait"></div>
+              <div>
+                <span class="tiny-label" id="run-level">УРОВЕНЬ 01</span>
+                <div id="hearts"></div>
+              </div>
+              <span class="run-rule"></span><span id="run-coins"></span>
+            </div>
+            <button
+              id="pause-game"
+              class="icon-btn glass"
+              aria-label="Пауза"
+              title="Пауза (Esc)"
+            >
+              <i data-icon="pause"></i>
+            </button>
+          </div>
+          <div id="level-intro"></div>
+          <div id="game-loading" hidden role="status">
+            <i data-icon="sparkle" data-size="25"></i
+            ><span>Открываем тропу…</span>
+          </div>
+          <div class="goal-chip glass">
+            <i data-icon="flag" data-size="16"></i
+            ><span>Найдите сияющий портал</span
+            ><span class="goal-direction" id="goal-direction">→</span>
+          </div>
+          <div id="touch-controls" aria-label="Сенсорное управление">
+            <div class="touch-move">
+              <button data-press="left" aria-label="Влево">
+                <i data-icon="left"></i></button
+              ><button data-press="right" aria-label="Вправо">
+                <i data-icon="arrow"></i></button
+              ><span class="touch-ladder"
+                ><button data-press="up" aria-label="Подняться">
+                  <i data-icon="up"></i></button
+                ><button data-press="down" aria-label="Спуститься">
+                  <i data-icon="down"></i></button
+              ></span>
+            </div>
+            <div class="touch-action">
+              <button data-press="cast" aria-label="Магия">
+                <i data-icon="magic"></i></button
+              ><button data-press="jump" aria-label="Прыжок">
+                <i data-icon="jump"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+        <div id="notice" role="status"></div>
+      </main>
+      <footer class="statusbar">
+        <div class="player-card">
+          <div class="portrait-wrap">
+            <div class="portrait"></div>
+            <span id="hero-level">1</span>
+          </div>
+          <div><strong>Лира</strong><small>Искательница</small></div>
+        </div>
+        <span class="footer-rule"></span>
+        <div class="xp-block">
+          <div class="xp-title">
+            <span>Опыт героя</span><b id="xp-value">0 <i>/ 100</i></b>
+          </div>
+          <div class="xp-track"><span id="xp-fill"></span></div>
+        </div>
+        <div class="footer-right">
+          <span id="footer-hint" class="footer-hint"
+            ><i data-icon="mouse" data-size="17"></i>Перетаскивайте карту</span
+          ><span class="footer-rule"></span
+          ><button id="help" class="help-button">
+            <i data-icon="keys" data-size="18"></i><span>Управление</span>
+          </button>
+        </div>
+      </footer>
+      <dialog id="dialog" aria-labelledby="dialog-title">
+        <div id="dialog-content"></div>
+      </dialog>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
