@@ -1,3 +1,4 @@
+import "./style.css";
 import { levels, num } from "./data.js";
 import {
   readSave,
